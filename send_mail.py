@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-def send_email(recipient, name):
+def send_email(recipient, name, ticket_type, ticket_price):
     import smtplib
     from email.mime.text import MIMEText
     from email.mime.multipart import MIMEMultipart
@@ -23,7 +23,7 @@ def send_email(recipient, name):
     text = fp2.read()
     fp2.close()
 
-    data = {'name': name}
+    data = {'name': name, "ticket_type": ticket_type, "ticket_price": ticket_price}
     send_html = html.format(**data)
     send_text = text.format(**data)
 
@@ -33,7 +33,7 @@ def send_email(recipient, name):
     msg.attach(part1)
     msg.attach(part2)
 
-    msg['Subject'] = '2017 SITCON 夏令營 學員備取通知信'
+    msg['Subject'] = '2017 SITCON 夏令營 學員錄取通知信'
     msg['From'] = FROM
     msg['To'] = TO
     msg.add_header('reply-to', REPLY_TO_ADDRESS)
@@ -56,4 +56,4 @@ import csv
 with open('main.csv', 'r', encoding='UTF-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        send_email(row['email'], row['name'])
+        send_email(row['email'], row['name'], row['ticket_type'], row['ticket_price'])
